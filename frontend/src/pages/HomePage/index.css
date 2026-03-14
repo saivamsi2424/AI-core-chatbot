@@ -1,0 +1,237 @@
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark {
+  --bg: #0f172a;
+  --card: #151c2c;
+  --text: #f8fafc;
+  --dim: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --bubble-ai: #1e293b;
+  --input-bg: #1e293b;
+}
+
+.light {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --dim: #64748b;
+  --border: rgba(0, 0, 0, 0.08);
+  --bubble-ai: #f1f5f9;
+  --input-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  overflow: hidden; /* Prevents double scrollbars */
+}
+
+/* Container set to 100% width and height */
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  background: var(--bg);
+  transition: 0.3s;
+}
+
+.chat-full-screen {
+  width: 100%; /* Covers entire width */
+  height: 100%; /* Covers entire height */
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+}
+
+/* Header stays fixed at top */
+.header {
+  padding: 15px 30px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: 0.2s;
+}
+
+/* Chat Body expands to full width */
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px 10%; /* Increased horizontal padding for readability on wide screens */
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.hero-section {
+  text-align: center;
+  margin: auto;
+  color: var(--text);
+}
+.sparkle {
+  font-size: 4rem;
+  margin-bottom: 15px;
+}
+
+.message-row {
+  display: flex;
+  width: 100%;
+}
+.message-row.user {
+  justify-content: flex-end;
+}
+.message-row.ai {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 85%; /* Allows text to spread out more */
+  padding: 15px 25px;
+  border-radius: 20px;
+  line-height: 1.7;
+  font-size: 1rem;
+  color: var(--text);
+  white-space: pre-wrap; /* Maintains spacing from AI response */
+}
+
+.user .bubble {
+  background: var(--primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.ai .bubble {
+  background: var(--bubble-ai);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* Footer & Input Pill */
+.footer {
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  background: var(--card);
+}
+
+.input-pill-wrapper {
+  width: 80%; /* Input pill doesn't hit the edges for better UI */
+  max-width: 1100px;
+}
+
+.input-pill {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.input-pill input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 1.1rem;
+  padding: 10px 0;
+}
+
+.pill-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mic {
+  background: transparent;
+  color: var(--dim);
+}
+.send {
+  background: var(--primary);
+  color: white;
+}
+.send.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Custom Scrollbar for the AI feel */
+.chat-body::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+/* Desktop adjustments */
+@media (min-width: 1400px) {
+  .chat-body {
+    padding: 40px 20%;
+  } /* Centers text more on huge screens */
+}
+.active-mic {
+  animation: pulse-red 1.5s infinite;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
+
+/* Ensure pre-wrap is on ai bubbles for proper formatting */
+.ai .bubble {
+  white-space: pre-wrap;
+}
