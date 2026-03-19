@@ -1,5 +1,11 @@
 const express = require("express");
-const cors = require("cors");
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 require("dotenv").config();
 const chatRoute = require("./routes/chat");
 const authRoute = require("./routes/auth");
