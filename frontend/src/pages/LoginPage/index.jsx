@@ -44,8 +44,8 @@ function LoginPage() {
 
     try {
       const url = isSignup
-        ? "http://localhost:5000/api/auth/signup"
-        : "http://localhost:5000/api/auth/login";
+        ? "https://ai-core-backend.onrender.com/api/auth/signup"
+        : "https://ai-core-backend.onrender.com/api/auth/login";
 
       const body = isSignup
         ? { username, email, password }

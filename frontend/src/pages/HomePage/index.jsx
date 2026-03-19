@@ -95,7 +95,7 @@ function HomePage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/chat",
+        "https://ai-core-backend.onrender.com/api/chat",
         {
           message: input,
           history: messages,
