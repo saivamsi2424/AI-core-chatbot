@@ -231,7 +231,44 @@ body {
   }
 }
 
-/* Ensure pre-wrap is on ai bubbles for proper formatting */
 .ai .bubble {
   white-space: pre-wrap;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Small devices */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 15px;
+  }
+
+  .actions {
+    flex-direction: row; 
+    flex-wrap: nowrap;   
+    gap: 8px;
+  }
+
+  .nav-btn {
+    padding: 8px;
+    font-size: 1.1rem;
+  }
+
+  .actions span {
+    display: none; 
+  }
+}
+
+@media (max-width: 480px) {
+  .actions {
+    gap: 5px;
+  }
+
+  .nav-btn {
+    padding: 6px;
+    font-size: 1rem;
+  }
 }

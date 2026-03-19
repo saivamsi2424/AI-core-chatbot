@@ -7,12 +7,15 @@ import {
   FiMoon,
   FiTrash2,
   FiStopCircle,
+  FiLogOut,
 } from "react-icons/fi";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 const TypingEffect = ({ text }) => {
   const [displayedText, setDisplayedText] = useState("");
+
   useEffect(() => {
     let i = 0;
     const timer = setInterval(() => {
@@ -22,18 +25,33 @@ const TypingEffect = ({ text }) => {
     }, 10);
     return () => clearInterval(timer);
   }, [text]);
+
   return <span>{displayedText}</span>;
 };
 
 function HomePage() {
+  const navigate = useNavigate();
+
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [darkMode, setDarkMode] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+
   const messagesEndRef = useRef(null);
 
-  // 1. Voice Recognition Setup
+  const username = localStorage.getItem("username");
+
+  // Redirect if not logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first");
+      navigate("/");
+    }
+  }, []);
+
+  //  Speech Recognition
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = SpeechRecognition ? new SpeechRecognition() : null;
@@ -63,20 +81,31 @@ function HomePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!input.trim() || loading) return;
+
+    const token = localStorage.getItem("token");
 
     const userMsg = { role: "user", text: input };
     const newMessages = [...messages, userMsg];
+
     setMessages(newMessages);
     setInput("");
     setLoading(true);
 
     try {
-      // Sending full history for "Conversational Mind"
-      const response = await axios.post("http://localhost:5000/api/chat", {
-        message: input,
-        history: messages, // Send existing chat history
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/chat",
+        {
+          message: input,
+          history: messages,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       setMessages([
         ...newMessages,
@@ -85,11 +114,18 @@ function HomePage() {
     } catch (error) {
       setMessages([
         ...newMessages,
-        { role: "ai", text: "⚠️ Error connecting to AI." },
+        { role: "ai", text: "Please login again or token expired." },
       ]);
     } finally {
       setLoading(false);
     }
+  };
+
+  //  Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/");
   };
 
   return (
@@ -99,12 +135,20 @@ function HomePage() {
           <div className="brand">
             <FiZap className="zap" /> <span>AI CORE</span>
           </div>
+
           <div className="actions">
+            <span style={{ marginRight: "10px" }}>👤 {username || "User"}</span>
+
             <button className="nav-btn" onClick={() => setMessages([])}>
               <FiTrash2 />
             </button>
+
             <button className="nav-btn" onClick={() => setDarkMode(!darkMode)}>
               {darkMode ? <FiSun /> : <FiMoon />}
+            </button>
+
+            <button className="nav-btn" onClick={handleLogout}>
+              <FiLogOut />
             </button>
           </div>
         </header>
@@ -144,12 +188,14 @@ function HomePage() {
                   <FiMic size={20} />
                 )}
               </button>
+
               <input
                 type="text"
                 placeholder={isListening ? "Listening..." : "Type a message..."}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               />
+
               <button
                 type="submit"
                 className="pill-btn send"
